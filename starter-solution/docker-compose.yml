@@ -1,0 +1,15 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: eduplatform-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "EduPlatform_dev_2026!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - eduplatform-sqlserver-data:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+  eduplatform-sqlserver-data:

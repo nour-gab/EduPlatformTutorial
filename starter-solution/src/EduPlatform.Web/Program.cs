@@ -1,13 +1,6 @@
 using EduPlatform.Application;
-using EduPlatform.Application.Common.Behaviors;
-using EduPlatform.Application.Common.Interfaces;
-using EduPlatform.Domain.Entities;
-using EduPlatform.Infrastructure;
-using EduPlatform.Infrastructure.Data;
 using EduPlatform.Infrastructure.Identity;
-using EduPlatform.Persistence;
 using EduPlatform.Persistence.Context;
-using EduPlatform.Persistence.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,23 +24,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(opts =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         sql => sql.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-// 4. Repositories, UoW
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-// 5. MediatR — register Application layer assembly; behaviors are auto-discovered
+// 4. MediatR — register the Application layer assembly.
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(Marker).Assembly);
-    cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
-    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
-    cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
-    cfg.AddOpenBehavior(typeof(UnhandledExceptionBehavior<,>));
 });
 
-// 6. AutoMapper + FluentValidation
-builder.Services.AddAutoMapper(typeof(Marker).Assembly);
-builder.Services.AddValidatorsFromAssembly(typeof(Marker).Assembly);
+// 5. AutoMapper + FluentValidation
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Marker).Assembly));
 
 // 7. Identity (Infrastructure layer)
 builder.Services
@@ -72,10 +56,7 @@ builder.Services.AddAuthorization(opts =>
         p.RequireRole("Instructor").RequireClaim("Permission", "EditCourse"));
 });
 
-// 9. Cache service (Infrastructure)
-builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
-
-// 10. Health checks for production observability
+// 6. Health checks for production observability
 builder.Services.AddHealthChecks()
     .AddSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")!,

@@ -1,6 +1,3 @@
-# EduPlatform.sln — Clean Architecture starter
-# Layered projects: Domain (innermost) → Application → Persistence / Infrastructure → Web (outermost)
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduPlatform.Domain", "src\EduPlatform.Domain\EduPlatform.Domain.csproj", "{A1A1A1A1-1111-1111-1111-111111111111}"
