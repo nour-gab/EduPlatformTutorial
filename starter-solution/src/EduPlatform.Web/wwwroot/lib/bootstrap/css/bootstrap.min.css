@@ -1,0 +1,8 @@
+/* Placeholder. Restore the real Bootstrap CSS via libman:
+   dotnet tool install -g Microsoft.Web.LibraryManager.Cli
+   cd src/EduPlatform.Web && libman restore
+   See libman.json for library versions. */
+
+body { font-family: system-ui, sans-serif; }
+.lead { font-size: 1.1rem; }
+.btn-success { background-color: #43A047; color: #fff; border: none; padding: 0.5rem 1.5rem; border-radius: 6px; }

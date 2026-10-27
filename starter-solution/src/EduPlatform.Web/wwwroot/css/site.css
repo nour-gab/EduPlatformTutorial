@@ -1,0 +1,20 @@
+:root {
+  --bg-mint: #E8F5E9;
+  --bg-card: #FFFFFF;
+  --text-primary: #1F1F2C;
+  --text-secondary: #6E7191;
+  --accent-pink: #F8BBD0;
+  --accent-orange: #FFE0B2;
+  --accent-purple: #D1C4E9;
+  --accent-green: #C8E6C9;
+  --btn-success: #43A047;
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.06);
+  --radius-md: 12px;
+}
+
+body {
+  background-color: var(--bg-mint);
+  color: var(--text-primary);
+  font-family: 'Inter', 'Noto Sans', system-ui, sans-serif;
+  min-height: 100vh;
+}

@@ -1,0 +1,45 @@
+%% EduPlatform — CQRS / MediatR Request Flow
+%% Shows how a single IMediator.Send travels through the pipeline.
+
+flowchart TB
+    Browser["Browser request<br/>GET /course/flutter-masterclass"]
+    Ctrl["CourseController.Details(slug)<br/><i>2 lines — calls IMediator.Send</i>"]
+    PipelineStart(["MediatR pipeline<br/>(in registration order)"])
+
+    subgraph Pipeline["Pipeline Behaviors"]
+        B1["1. LoggingBehavior<br/>BeginScope(RequestType, CorrelationId)"]
+        B2["2. ValidationBehavior<br/>FluentValidation → 400 if invalid"]
+        B3["3. CachingBehavior<br/>[Cached(N)] → return cached if hit"]
+        B4["4. TransactionBehavior<br/>BEGIN TRANSACTION (commands only)"]
+        B5["5. UnhandledExceptionBehavior<br/>try/catch + ProblemDetails"]
+    end
+
+    Handler["GetCourseBySlugQueryHandler<br/>loads Course + Lessons + Reviews<br/>maps to CourseDetailDto"]
+    UoW["UnitOfWork.SaveChangesAsync<br/>1. SaveChangesAsync<br/>2. Dispatch domain events<br/>3. ClearDomainEvents"]
+    Commit["TransactionBehavior<br/>COMMIT (commands) / no-op (queries)"]
+    Cache["CachingBehavior<br/>write cached response (TTL)"]
+    Log["LoggingBehavior<br/>log Handled in Nms"]
+    View["Razor view Details.cshtml<br/>renders CourseDetailDto"]
+    Browser2["Browser renders<br/>mint-green detail page"]
+
+    Browser --> Ctrl
+    Ctrl --> PipelineStart
+    PipelineStart --> B1
+    B1 --> B2
+    B2 --> B3
+    B3 --> B4
+    B4 --> B5
+    B5 --> Handler
+    Handler --> UoW
+    UoW --> Commit
+    Commit --> Cache
+    Cache --> Log
+    Log --> View
+    View --> Browser2
+
+    classDef behavior fill:#FFE0B2,stroke:#F57C00,color:#1F1F2C
+    classDef domain fill:#C8E6C9,stroke:#388E3C,color:#1F1F2C
+    classDef uow fill:#D1C4E9,stroke:#5E35B1,color:#1F1F2C
+    class B1,B2,B3,B4,B5 behavior
+    class Handler domain
+    class UoW uow

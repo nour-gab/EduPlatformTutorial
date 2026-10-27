@@ -1,0 +1,25 @@
+# .gitignore for EduPlatform starter solution
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Build artifacts
+bin/
+obj/
+artifacts/
+publish/
+
+# Logs & secrets
+*.log
+appsettings.Development.json
+appsettings.Production.json
+secrets.json
+.env
+
+# EF bundle local cache
+*.dbmdl
+*.ldf
+*.mdf

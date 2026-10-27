@@ -1,0 +1,33 @@
+@{
+    // Minimal _Layout.cshtml placeholder.
+    // The full mint-themed layout is walked through in Ch.13.
+    // This stub keeps the starter solution compiling before you write Ch.13's code.
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — EduPlatform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body style="background-color: #E8F5E9; min-height: 100vh;">
+    <header class="navbar navbar-expand-md sticky-top"
+            style="background-color: rgba(255,255,255,0.85); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(0,0,0,0.04);">
+        <div class="container">
+            <a asp-controller="Home" asp-action="Index" class="navbar-brand fw-bold">
+                EduPlatform
+            </a>
+        </div>
+    </header>
+
+    <main class="container py-4">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

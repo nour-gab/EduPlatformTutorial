@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>eduplatform-9c2f4a7e-3b1d-4a8e-9f2c-7d3e1b5a8c4f</UserSecretsId>
+  </PropertyGroup>
+
+  <!-- Web is the outermost ring. It wires DI (MediatR, AutoMapper, DbContext),
+       exposes MVC controllers, serves Razor views, hosts static assets.
+       It references every other ring because it owns composition root responsibilities. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\EduPlatform.Application\EduPlatform.Application.csproj" />
+    <ProjectReference Include="..\EduPlatform.Persistence\EduPlatform.Persistence.csproj" />
+    <ProjectReference Include="..\EduPlatform.Infrastructure\EduPlatform.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.2" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="8.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+</Project>

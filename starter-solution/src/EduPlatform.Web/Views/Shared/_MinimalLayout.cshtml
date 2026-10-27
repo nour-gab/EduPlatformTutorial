@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — EduPlatform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body style="background-color: #E8F5E9; min-height: 100vh;">
+    <div class="container">
+        <div class="text-center py-4">
+            <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
+                <span class="h3 fw-bold">EduPlatform</span>
+            </a>
+        </div>
+        @RenderBody()
+    </div>
+</body>
+</html>

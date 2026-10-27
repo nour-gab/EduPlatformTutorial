@@ -1,0 +1,25 @@
+%% EduPlatform — Clean Architecture
+%% Render via mmdc (npm i -g @mermaid-js/mermaid-cli) or paste into mermaid.live
+
+flowchart TB
+    Web["<b>EduPlatform.Web</b><br/>Controllers, Razor, Program.cs<br/>(composition root)"]
+    Pers["<b>EduPlatform.Persistence</b><br/>DbContext, Repositories, Migrations"]
+    Infra["<b>EduPlatform.Infrastructure</b><br/>Identity, Email, Cache, Payments"]
+    App["<b>EduPlatform.Application</b><br/>CQRS, Behaviors, Interfaces, Specs"]
+    Dom["<b>EduPlatform.Domain</b><br/>Aggregates, VOs, Domain Events"]
+
+    Web --> App
+    Web --> Pers
+    Web --> Infra
+    Pers --> App
+    Infra --> App
+    App --> Dom
+
+    classDef outer fill:#FFE0B2,stroke:#F57C00,stroke-width:2px,color:#1F1F2C
+    classDef mid fill:#D1C4E9,stroke:#5E35B1,stroke-width:2px,color:#1F1F2C
+    classDef inner fill:#C8E6C9,stroke:#388E3C,stroke-width:2px,color:#1F1F2C
+    classDef core fill:#F8BBD0,stroke:#AD1457,stroke-width:2px,color:#1F1F2C
+    class Web outer
+    class Pers,Infra mid
+    class App inner
+    class Dom core

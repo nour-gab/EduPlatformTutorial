@@ -1,0 +1,93 @@
+%% EduPlatform — Entity-Relationship Diagram
+%% Render via mmdc or paste into mermaid.live
+
+erDiagram
+    Category ||--o{ Course : "owns"
+    Course ||--o{ Lesson : "contains"
+    Course ||--o{ Review : "rated by"
+    Course ||--o{ Enrollment : "has"
+    AspNetUsers ||--o{ Course : "instructs"
+    AspNetUsers ||--o{ Review : "writes"
+    AspNetUsers ||--o{ Enrollment : "enrolls in"
+    Enrollment ||--o{ CourseProgress : "tracks"
+    Lesson ||--|| CourseProgress : "watches"
+    AspNetUsers ||--o{ WeeklyActivity : "logs"
+
+    Category {
+        uniqueidentifier Id PK
+        nvarchar Name
+        nvarchar Slug UK
+        nvarchar ColorHex
+        int DisplayOrder
+    }
+    Course {
+        uniqueidentifier Id PK
+        nvarchar Slug UK
+        nvarchar Title
+        nvarchar Description
+        decimal Price
+        char Currency
+        uniqueidentifier CategoryId FK
+        uniqueidentifier InstructorId FK
+        tinyint Status
+        decimal AverageRating
+        int ReviewCount
+        int EnrollmentCount
+        datetime2 CreatedAt
+        datetime2 UpdatedAt
+        bit IsDeleted
+        rowversion RowVersion
+    }
+    Lesson {
+        uniqueidentifier Id PK
+        uniqueidentifier CourseId FK
+        nvarchar Title
+        int Order
+        nvarchar ContentMarkdown
+        int EstimatedMinutes
+        bit IsPreview
+        rowversion RowVersion
+    }
+    Review {
+        uniqueidentifier Id PK
+        uniqueidentifier CourseId FK
+        uniqueidentifier StudentId FK
+        decimal Rating
+        nvarchar Comment
+        datetime2 CreatedAt
+        datetime2 UpdatedAt
+    }
+    Enrollment {
+        uniqueidentifier Id PK
+        uniqueidentifier CourseId FK
+        uniqueidentifier StudentId FK
+        tinyint Status
+        datetime2 EnrolledAtUtc
+        datetime2 CompletedAtUtc
+        datetime2 CancelledAtUtc
+        rowversion RowVersion
+    }
+    CourseProgress {
+        uniqueidentifier Id PK
+        uniqueidentifier EnrollmentId FK
+        uniqueidentifier LessonId FK
+        int MinutesWatched
+        bit IsCompleted
+        datetime2 UpdatedAt
+    }
+    WeeklyActivity {
+        bigint Id PK
+        uniqueidentifier StudentId FK
+        date WeekStartUtc
+        nvarchar MinutesByDay_JSON
+    }
+    AspNetUsers {
+        uniqueidentifier Id PK
+        nvarchar UserName
+        nvarchar Email
+        nvarchar FullName
+        nvarchar AvatarUrl
+        int FriendsCount
+        int ActivityMinutesThisWeek
+        datetime2 LastActiveAtUtc
+    }
