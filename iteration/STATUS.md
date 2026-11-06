@@ -8,17 +8,17 @@
 
 ## Current position
 
-- **Current chapter**: 1
-- **Current step**: 1.1 (pre-flight, not started)
-- **Last commit SHA**: (none yet — repo just initialized)
-- **Last updated**: (the date you started — `YYYY-MM-DD`)
+- **Current chapter**: 3
+- **Current step**: 3.1 
+- **Last commit SHA**: first commit for the architecture
+- **Last updated**: 2026/11/04
 
 ## Chapter status table
 
 | Ch | Title | Status | Steps done | Notes |
 |----|-------|--------|-------------|-------|
-| 01 | Project Overview & Architecture Map | not_started | 0/6 | (start here) |
-| 02 | Solution Structure & Clean Architecture | not_started | 0/? | |
+| 01 | Project Overview & Architecture Map | completed | 6/6 | (start here) |
+| 02 | Solution Structure & Clean Architecture | completed | 11/11 | |
 | 03 | Domain Layer Design | not_started | 0/? | |
 | 04 | Database Design | not_started | 0/? | |
 | 05 | EF Core: Code-First Migrations | not_started | 0/? | |
