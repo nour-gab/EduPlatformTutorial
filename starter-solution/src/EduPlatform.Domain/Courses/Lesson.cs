@@ -9,7 +9,7 @@ public class Lesson : BaseEntity
     public string Title { get; private set; } = string.Empty;
     public int Order { get; private set; }
     public string ContentMarkdown { get; private set; } = string.Empty;
-    public TimeSpan EstimatedMinutes { get; private set; }
+    public int EstimatedMinutes { get; private set; }
     public bool IsPreview { get; private set; }
 
     internal Lesson(Guid courseId, string title, int order, string contentMarkdown)

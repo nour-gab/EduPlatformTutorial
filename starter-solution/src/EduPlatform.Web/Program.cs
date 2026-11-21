@@ -1,6 +1,7 @@
 using EduPlatform.Application;
 using EduPlatform.Infrastructure.Identity;
 using EduPlatform.Persistence.Context;
+using EduPlatform.Persistence.Seed;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,12 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
+
+    // Wire DatabaseSeeder into Development startup after migration application.
+    var seeder = new DatabaseSeeder(
+        db,
+        scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>());
+    await seeder.SeedAsync();
 }
 
 // 12. Middleware pipeline (order matters — Ch.23 discusses the rationale)

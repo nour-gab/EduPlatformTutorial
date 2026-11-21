@@ -8,10 +8,10 @@
 
 ## Current position
 
-- **Current chapter**: 3
-- **Current step**: 3.1 
+- **Current chapter**: 6
+- **Current step**: 6.1
 - **Last commit SHA**: first commit for the architecture
-- **Last updated**: 2026/11/04
+- **Last updated**: 2026/11/21
 
 ## Chapter status table
 
@@ -19,9 +19,9 @@
 |----|-------|--------|-------------|-------|
 | 01 | Project Overview & Architecture Map | completed | 6/6 | (start here) |
 | 02 | Solution Structure & Clean Architecture | completed | 11/11 | |
-| 03 | Domain Layer Design | not_started | 0/? | |
-| 04 | Database Design | not_started | 0/? | |
-| 05 | EF Core: Code-First Migrations | not_started | 0/? | |
+| 03 | Domain Layer Design | completed | 10/10 | |
+| 04 | Database Design | completed | 6/6 | ERD complete; access patterns, index trade-offs, and outbox decision recorded in notes.md |
+| 05 | EF Core: Code-First Migrations | completed | 8/8 | Fluent API configurations, InitialCreate migration, SQL script, and Development seeder implemented |
 | 06 | Application Layer: CQRS with MediatR | not_started | 0/12 | example task file in `tasks/ch-06.tasks.md` |
 | 07 | Repository, UoW & Specification | not_started | 0/? | |
 | 08 | Cross-Cutting: Logging, Validation, Exceptions | not_started | 0/? | recommend `/ponytail-plan` for this dense chapter |

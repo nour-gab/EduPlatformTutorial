@@ -388,6 +388,26 @@ DO NOT:
 End with: "Recommendation: invoke skill X / no skill needed."
 ```
 
+## Prompt 13 '/chapter-full'
+
+```text
+/chapter-full N-M
+
+You are in FULL CHAPTER mode. Plan and execute multiple chapters at once while respecting the ponytail skill chapter N through M entirely in this session.
+for each chapter: 
+1. Read chapters/{N:00}-*.md fully. Keep in context.
+2. Plan 4-8 atomic steps. Save to tasks/ch-{N:00}.tasks.md.
+3. Execute ALL steps in sequence:
+   - After each: run dotnet build.
+   - If fail: stop, report, suggest fix. Do NOT continue.
+   - If success: continue to next step automatically.
+4. After all steps: run dotnet test if applicable.
+5. Show full summary: per-step files touched + build status + final test status.
+6. Suggest 1-3 logical commit messages.
+7. End with: "Chapter N complete. Fresh chat for /review-chapter N. Then update STATUS.md." 
+
+```
+
 ---
 
 ## How to customize these prompts
