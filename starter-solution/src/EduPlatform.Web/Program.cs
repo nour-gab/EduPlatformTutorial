@@ -1,4 +1,5 @@
 using EduPlatform.Application;
+using EduPlatform.Application.Common.Behaviors;
 using EduPlatform.Infrastructure.Identity;
 using EduPlatform.Persistence.Context;
 using EduPlatform.Persistence.Seed;
@@ -29,6 +30,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(opts =>
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(Marker).Assembly);
+    cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
+    cfg.AddOpenBehavior(typeof(UnhandledExceptionBehavior<,>));
 });
 
 // 5. AutoMapper + FluentValidation
