@@ -1,4 +1,5 @@
 using EduPlatform.Application;
+using EduPlatform.Application.Authorization;
 using EduPlatform.Application.Common.Behaviors;
 using EduPlatform.Application.Common.Interfaces;
 using EduPlatform.Infrastructure.Caching;
@@ -7,6 +8,7 @@ using EduPlatform.Persistence.Context;
 using EduPlatform.Persistence.Repositories;
 using EduPlatform.Persistence.Seed;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -99,14 +101,23 @@ if (!string.IsNullOrEmpty(googleSection["ClientId"]))
         });
 }
 
-// 8. Authorization policies (covered in Ch.10)
+// 8. Authorization policies (Ch.10)
 builder.Services.AddAuthorization(opts =>
 {
-    opts.AddPolicy("InstructorOnly", p => p.RequireRole("Instructor"));
-    opts.AddPolicy("AdminOnly", p => p.RequireRole("Admin"));
-    opts.AddPolicy("CourseInstructor", p =>
-        p.RequireRole("Instructor").RequireClaim("Permission", "EditCourse"));
+    opts.AddPolicy("StudentOnly",       p => p.RequireRole("Student"));
+    opts.AddPolicy("InstructorOnly",    p => p.RequireRole("Instructor"));
+    opts.AddPolicy("AdminOnly",         p => p.RequireRole("Admin"));
+    opts.AddPolicy("InstructorOrAdmin", p => p.RequireRole("Instructor", "Admin"));
+    opts.AddPolicy("CanEditCourse",     p => p.RequireClaim("Permission", "EditCourse"));
+    opts.AddPolicy("CanCreateCourse",   p => p.RequireClaim("Permission", "CreateCourse"));
+    opts.AddPolicy("CourseOwner",       p => p.Requirements.Add(new CourseOwnerRequirement()));
+    opts.AddPolicy("AdminDashboard",    p => p.Requirements.Add(new IsAdminActiveRequirement()));
 });
+
+// 8b. Authorization handlers
+builder.Services.AddSingleton<IAuthorizationHandler, CourseOwnerAuthorizationHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, EduPlatform.Web.Infrastructure.IsAdminActiveHandler>();
+builder.Services.AddHttpContextAccessor();
 
 // 6. Repository + Unit of Work (Ch.07)
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

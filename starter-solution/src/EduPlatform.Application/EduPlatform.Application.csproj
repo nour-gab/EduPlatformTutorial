@@ -21,6 +21,7 @@
         <PackageReference Include="AutoMapper" Version="15.1.4" />
     <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
     <PackageReference Include="Ardalis.Result" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.2" />
   </ItemGroup>
 
 </Project>

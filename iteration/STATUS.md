@@ -8,8 +8,8 @@
 
 ## Current position
 
-- **Current chapter**: 9
-- **Current step**: 9.done
+- **Current chapter**: 10
+- **Current step**: 10.done
 - **Last commit SHA**: first commit for the architecture
 - **Last updated**: 2026/11/23
 
@@ -26,7 +26,7 @@
 | 07 | Repository, UoW & Specification | completed | 7/7 | Generic Repository + UnitOfWork (Ardalis.Specification 8.0.0); 4 specs; 9 unit tests; DI registered |
 | 08 | Cross-Cutting: Logging, Validation, Exceptions | completed | 8/8 | GlobalExceptionFilter (RFC 7807), CorrelationIdMiddleware, CachingBehavior, MemoryCacheService, SqlServerDistributedCacheService, Serilog enrichers, NotFoundException |
 | 09 | Identity & Authentication | completed | 7/7 | ApplicationUser/Role complete; AccountController (Login/Register/Logout/AccessDenied); IdentityOptions; UpdateUserActivityMiddleware; Google auth stub |
-| 10 | Authorization Policies | not_started | 0/? | |
+| 10 | Authorization Policies | completed | 5/5 | Role/claim/resource-based policies; CourseOwnerAuthorizationHandler; IsAdminActiveHandler; InstructorController + AdminController stubs; HttpContextAccessor |
 | 11 | Course Catalog: Domain & Persistence | not_started | 0/? | |
 | 12 | Course Catalog: Application Layer | not_started | 0/? | |
 | 13 | Course Catalog: MVC Frontend (Mint Layout) | not_started | 0/11 | example task file in `tasks/ch-13.tasks.md` |
