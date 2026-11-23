@@ -49,13 +49,55 @@ builder.Services
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<IdentityOptions>(opts =>
+{
+    // Password — NIST 800-63B: length over complexity
+    opts.Password.RequiredLength          = 8;
+    opts.Password.RequiredUniqueChars     = 4;
+    opts.Password.RequireDigit            = true;
+    opts.Password.RequireLowercase        = true;
+    opts.Password.RequireUppercase        = true;
+    opts.Password.RequireNonAlphanumeric  = false;
+
+    // Lockout — brute-force protection
+    opts.Lockout.DefaultLockoutTimeSpan  = TimeSpan.FromMinutes(15);
+    opts.Lockout.MaxFailedAccessAttempts = 5;
+    opts.Lockout.AllowedForNewUsers      = true;
+
+    // User
+    opts.User.RequireUniqueEmail           = true;
+    opts.User.AllowedUserNameCharacters    = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+
+    // Sign-in
+    opts.SignIn.RequireConfirmedEmail       = false;   // demo; set true in prod
+    opts.SignIn.RequireConfirmedPhoneNumber = false;
+    opts.ClaimsIdentity.UserIdClaimType    = "sub";
+});
+
 builder.Services.ConfigureApplicationCookie(o =>
 {
-    o.LoginPath = "/Account/Login";
+    o.LoginPath        = "/Account/Login";
+    o.LogoutPath       = "/Account/Logout";
     o.AccessDeniedPath = "/Account/AccessDenied";
     o.SlidingExpiration = true;
-    o.ExpireTimeSpan = TimeSpan.FromDays(7);
+    o.ExpireTimeSpan    = TimeSpan.FromDays(7);
+    o.Cookie.Name        = "EduPlatform.Identity";
+    o.Cookie.HttpOnly    = true;
+    o.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // Always in prod; SameAsRequest for dev HTTP
+    o.Cookie.SameSite    = SameSiteMode.Lax;
 });
+
+// 7b. Google social login (ClientId/Secret set via User Secrets or env vars in prod)
+var googleSection = builder.Configuration.GetSection("Authentication:Google");
+if (!string.IsNullOrEmpty(googleSection["ClientId"]))
+{
+    builder.Services.AddAuthentication()
+        .AddGoogle(g =>
+        {
+            g.ClientId     = googleSection["ClientId"]!;
+            g.ClientSecret = googleSection["ClientSecret"]!;
+        });
+}
 
 // 8. Authorization policies (covered in Ch.10)
 builder.Services.AddAuthorization(opts =>
@@ -119,6 +161,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
+app.UseMiddleware<EduPlatform.Web.Infrastructure.UpdateUserActivityMiddleware>();
 app.UseAuthorization();
 
 app.MapControllerRoute(

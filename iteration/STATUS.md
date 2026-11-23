@@ -8,8 +8,8 @@
 
 ## Current position
 
-- **Current chapter**: 8
-- **Current step**: 8.done
+- **Current chapter**: 9
+- **Current step**: 9.done
 - **Last commit SHA**: first commit for the architecture
 - **Last updated**: 2026/11/23
 
@@ -25,7 +25,7 @@
 | 06 | Application Layer: CQRS with MediatR | completed | 12/12 | CQRS handlers, MediatR pipeline behaviors (Logging, Validation, UnhandledException), FluentValidation, Result pattern |
 | 07 | Repository, UoW & Specification | completed | 7/7 | Generic Repository + UnitOfWork (Ardalis.Specification 8.0.0); 4 specs; 9 unit tests; DI registered |
 | 08 | Cross-Cutting: Logging, Validation, Exceptions | completed | 8/8 | GlobalExceptionFilter (RFC 7807), CorrelationIdMiddleware, CachingBehavior, MemoryCacheService, SqlServerDistributedCacheService, Serilog enrichers, NotFoundException |
-| 09 | Identity & Authentication | not_started | 0/? | |
+| 09 | Identity & Authentication | completed | 7/7 | ApplicationUser/Role complete; AccountController (Login/Register/Logout/AccessDenied); IdentityOptions; UpdateUserActivityMiddleware; Google auth stub |
 | 10 | Authorization Policies | not_started | 0/? | |
 | 11 | Course Catalog: Domain & Persistence | not_started | 0/? | |
 | 12 | Course Catalog: Application Layer | not_started | 0/? | |
