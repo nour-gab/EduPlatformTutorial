@@ -1,3 +1,4 @@
+using System.Globalization;
 using Ardalis.GuardClauses;
 
 namespace EduPlatform.Domain.Reviews;
@@ -19,5 +20,5 @@ public readonly struct RatingScore : IEquatable<RatingScore>, IComparable<Rating
     public bool Equals(RatingScore other) => Value == other.Value;
     public override bool Equals(object? obj) => obj is RatingScore r && Equals(r);
     public override int GetHashCode() => Value.GetHashCode();
-    public override string ToString() => $"{Value:F1}";
+    public override string ToString() => Value.ToString("F1", CultureInfo.InvariantCulture);
 }

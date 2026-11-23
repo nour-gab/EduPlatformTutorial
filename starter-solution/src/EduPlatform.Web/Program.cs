@@ -1,7 +1,10 @@
 using EduPlatform.Application;
 using EduPlatform.Application.Common.Behaviors;
+using EduPlatform.Application.Common.Interfaces;
+using EduPlatform.Infrastructure.Caching;
 using EduPlatform.Infrastructure.Identity;
 using EduPlatform.Persistence.Context;
+using EduPlatform.Persistence.Repositories;
 using EduPlatform.Persistence.Seed;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +35,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Marker).Assembly);
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
     cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    cfg.AddOpenBehavior(typeof(CachingBehavior<,>));
     cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
     cfg.AddOpenBehavior(typeof(UnhandledExceptionBehavior<,>));
 });
@@ -62,7 +66,29 @@ builder.Services.AddAuthorization(opts =>
         p.RequireRole("Instructor").RequireClaim("Permission", "EditCourse"));
 });
 
-// 6. Health checks for production observability
+// 6. Repository + Unit of Work (Ch.07)
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IReadRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// 6b. Cache (Ch.08) — MemoryCache for dev/single-instance; SQL distributed for prod multi-instance
+if (builder.Configuration["Cache:UseDistributedCache"] == "true")
+{
+    builder.Services.AddDistributedSqlServerCache(opts =>
+    {
+        opts.ConnectionString = builder.Configuration["Cache:SqlServerDistributedCacheConnectionString"];
+        opts.SchemaName = "dbo";
+        opts.TableName = "DistributedCache";
+    });
+    builder.Services.AddSingleton<ICacheService, SqlServerDistributedCacheService>();
+}
+else
+{
+    builder.Services.AddMemoryCache();
+    builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
+}
+
+// 6b. Health checks for production observability
 builder.Services.AddHealthChecks()
     .AddSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")!,
@@ -86,6 +112,7 @@ if (app.Environment.IsDevelopment())
 
 // 12. Middleware pipeline (order matters — Ch.23 discusses the rationale)
 app.UseSerilogRequestLogging();
+app.UseMiddleware<EduPlatform.Web.Infrastructure.CorrelationIdMiddleware>();
 app.UseExceptionHandler("/Home/Error");
 app.UseHsts();
 app.UseHttpsRedirection();

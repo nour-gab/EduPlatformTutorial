@@ -8,10 +8,10 @@
 
 ## Current position
 
-- **Current chapter**: 6
-- **Current step**: 6.1
+- **Current chapter**: 8
+- **Current step**: 8.done
 - **Last commit SHA**: first commit for the architecture
-- **Last updated**: 2026/11/21
+- **Last updated**: 2026/11/23
 
 ## Chapter status table
 
@@ -22,9 +22,9 @@
 | 03 | Domain Layer Design | completed | 10/10 | |
 | 04 | Database Design | completed | 6/6 | ERD complete; access patterns, index trade-offs, and outbox decision recorded in notes.md |
 | 05 | EF Core: Code-First Migrations | completed | 8/8 | Fluent API configurations, InitialCreate migration, SQL script, and Development seeder implemented |
-| 06 | Application Layer: CQRS with MediatR | not_started | 0/12 | example task file in `tasks/ch-06.tasks.md` |
-| 07 | Repository, UoW & Specification | not_started | 0/? | |
-| 08 | Cross-Cutting: Logging, Validation, Exceptions | not_started | 0/? | recommend `/ponytail-plan` for this dense chapter |
+| 06 | Application Layer: CQRS with MediatR | completed | 12/12 | CQRS handlers, MediatR pipeline behaviors (Logging, Validation, UnhandledException), FluentValidation, Result pattern |
+| 07 | Repository, UoW & Specification | completed | 7/7 | Generic Repository + UnitOfWork (Ardalis.Specification 8.0.0); 4 specs; 9 unit tests; DI registered |
+| 08 | Cross-Cutting: Logging, Validation, Exceptions | completed | 8/8 | GlobalExceptionFilter (RFC 7807), CorrelationIdMiddleware, CachingBehavior, MemoryCacheService, SqlServerDistributedCacheService, Serilog enrichers, NotFoundException |
 | 09 | Identity & Authentication | not_started | 0/? | |
 | 10 | Authorization Policies | not_started | 0/? | |
 | 11 | Course Catalog: Domain & Persistence | not_started | 0/? | |
