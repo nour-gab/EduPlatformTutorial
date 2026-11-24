@@ -12,6 +12,8 @@ namespace EduPlatform.Application.Common.Interfaces
     {
         Task<T?> FirstOrDefaultAsync(ISpecification<T> spec, CancellationToken ct = default);
         Task<List<T>> ListAsync(ISpecification<T> spec, CancellationToken ct = default);
+        Task<List<TResult>> ListAsync<TResult>(ISpecification<T, TResult> spec, CancellationToken ct = default);
+        Task<TResult?> FirstOrDefaultAsync<TResult>(ISpecification<T, TResult> spec, CancellationToken ct = default);
         Task<int> CountAsync(ISpecification<T> spec, CancellationToken ct = default);
     }
 

@@ -1,0 +1,122 @@
+@model IReadOnlyList<EduPlatform.Application.Courses.Queries.GetInstructorCourses.InstructorCourseListDto>
+@{
+    ViewData["Title"] = "My Courses — Instructor Portal";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Instructor Portal</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> New Course
+        </a>
+    </div>
+
+    @if (TempData["Error"] is string errMsg)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @errMsg
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Success"] is string successMsg)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @successMsg
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-journal-plus display-4 text-muted"></i>
+            <p class="mt-3 text-muted">You haven't created any courses yet.</p>
+            <a asp-action="Create" class="btn btn-primary">Create your first course</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th class="text-center">Students</th>
+                        <th class="text-center">Rating</th>
+                        <th class="text-center">Reviews</th>
+                        <th class="text-center">Lessons</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@course.Id" class="fw-semibold text-decoration-none">
+                                    @course.Title
+                                </a>
+                                <div class="text-muted small">/@course.Slug</div>
+                            </td>
+                            <td>
+                                @{
+                                    var (badgeClass, label) = course.Status switch
+                                    {
+                                        EduPlatform.Domain.Courses.CourseStatus.Published => ("bg-success", "Published"),
+                                        EduPlatform.Domain.Courses.CourseStatus.Draft     => ("bg-secondary", "Draft"),
+                                        EduPlatform.Domain.Courses.CourseStatus.Archived  => ("bg-warning text-dark", "Archived"),
+                                        _ => ("bg-secondary", course.Status.ToString())
+                                    };
+                                }
+                                <span class="badge @badgeClass">@label</span>
+                            </td>
+                            <td class="text-center">@course.EnrollmentCount</td>
+                            <td class="text-center">
+                                @if (course.ReviewCount > 0)
+                                {
+                                    <span>⭐ @course.AverageRating.ToString("F1")</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td class="text-center">@course.ReviewCount</td>
+                            <td class="text-center">@course.LessonCount</td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@course.Id"
+                                   class="btn btn-sm btn-outline-primary me-1">Edit</a>
+
+                                @if (course.Status == EduPlatform.Domain.Courses.CourseStatus.Draft)
+                                {
+                                    <form asp-action="Publish" asp-route-id="@course.Id"
+                                          method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-success me-1"
+                                                onclick="return confirm('Publish this course?')">
+                                            Publish
+                                        </button>
+                                    </form>
+                                }
+
+                                @if (course.Status == EduPlatform.Domain.Courses.CourseStatus.Published)
+                                {
+                                    <form asp-action="Archive" asp-route-id="@course.Id"
+                                          method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-warning"
+                                                onclick="return confirm('Archive this course?')">
+                                            Archive
+                                        </button>
+                                    </form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

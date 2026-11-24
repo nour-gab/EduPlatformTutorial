@@ -4,6 +4,8 @@ using EduPlatform.Application.Common.Behaviors;
 using EduPlatform.Application.Common.Interfaces;
 using EduPlatform.Infrastructure.Caching;
 using EduPlatform.Infrastructure.Identity;
+using EduPlatform.Infrastructure.Services;
+using EduPlatform.Infrastructure.Activity;
 using EduPlatform.Persistence.Context;
 using EduPlatform.Persistence.Repositories;
 using EduPlatform.Persistence.Seed;
@@ -123,6 +125,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped(typeof(IReadRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserLookupService, UserLookupService>();
+builder.Services.AddScoped<ICurrentUserService, EduPlatform.Web.Infrastructure.CurrentUserService>();
+builder.Services.AddScoped<IWeeklyActivityService, WeeklyActivityService>();
 
 // 6b. Cache (Ch.08) — MemoryCache for dev/single-instance; SQL distributed for prod multi-instance
 if (builder.Configuration["Cache:UseDistributedCache"] == "true")
@@ -167,6 +172,7 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 app.UseMiddleware<EduPlatform.Web.Infrastructure.CorrelationIdMiddleware>();
 app.UseExceptionHandler("/Home/Error");
+app.UseStatusCodePagesWithReExecute("/error/{0}");
 app.UseHsts();
 app.UseHttpsRedirection();
 app.UseStaticFiles();

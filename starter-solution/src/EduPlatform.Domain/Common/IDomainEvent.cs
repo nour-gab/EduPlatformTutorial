@@ -1,10 +1,12 @@
+using MediatR;
+
 namespace EduPlatform.Domain.Common;
 
 /// <summary>
 /// Marker interface for events raised by an aggregate root.
-/// The Application layer converts these to MediatR INotifications after SaveChangesAsync.
+/// Extends INotification so MediatR can dispatch them directly after SaveChangesAsync.
 /// </summary>
-public interface IDomainEvent
+public interface IDomainEvent : INotification
 {
     Guid EventId { get; }
     DateTime OccurredOnUtc { get; }

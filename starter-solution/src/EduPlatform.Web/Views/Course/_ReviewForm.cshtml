@@ -1,0 +1,31 @@
+@* EduPlatform.Web/Views/Course/_ReviewForm.cshtml — Ch.16 §16.8 *@
+@using EduPlatform.Web.Controllers
+@model AddReviewViewModel
+
+<form asp-controller="Review" asp-action="Add" method="post" class="card border-0 shadow-sm p-4">
+    <input type="hidden" asp-for="CourseId" />
+    <input type="hidden" asp-for="CourseSlug" />
+    <h3 class="h6 mb-3">Leave a review</h3>
+
+    <div class="mb-3">
+        <label class="form-label">Your rating</label>
+        <div class="rating-stars">
+            @for (var i = 1; i <= 5; i++)
+            {
+                <input type="radio" name="Rating" id="rating-@i" value="@i" class="btn-check" />
+                <label for="rating-@i" class="btn btn-outline-warning">
+                    <i class="bi bi-star-fill"></i>
+                </label>
+            }
+        </div>
+        <span asp-validation-for="Rating" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Comment" class="form-label"></label>
+        <textarea asp-for="Comment" class="form-control" rows="3" placeholder="Share your thoughts about this course…"></textarea>
+        <span asp-validation-for="Comment" class="text-danger small"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit review</button>
+</form>

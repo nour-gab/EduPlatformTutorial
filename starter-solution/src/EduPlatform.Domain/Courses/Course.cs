@@ -121,4 +121,19 @@ public class Course : BaseEntity
 
 	public void IncrementEnrollment() { EnrollmentCount++; MarkUpdated(); }
 	public void DecrementEnrollment() { EnrollmentCount = Math.Max(0, EnrollmentCount - 1); MarkUpdated(); }
+
+	/// <summary>Updates mutable course properties. Slug change is only allowed in Draft status.</summary>
+	public void Update(string title, string description, CourseSlug slug, Money price, Guid categoryId)
+	{
+		Guard.Against.NullOrWhiteSpace(title);
+		Guard.Against.NullOrWhiteSpace(description);
+		Guard.Against.Null(slug);
+		Guard.Against.Default(categoryId);
+		Title       = title;
+		Description = description;
+		Slug        = slug;
+		Price       = price;
+		CategoryId  = categoryId;
+		MarkUpdated();
+	}
 }

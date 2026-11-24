@@ -8,8 +8,8 @@
 
 ## Current position
 
-- **Current chapter**: 10
-- **Current step**: 10.done
+- **Current chapter**: 16
+- **Current step**: 16.0
 - **Last commit SHA**: first commit for the architecture
 - **Last updated**: 2026/11/23
 
@@ -27,12 +27,12 @@
 | 08 | Cross-Cutting: Logging, Validation, Exceptions | completed | 8/8 | GlobalExceptionFilter (RFC 7807), CorrelationIdMiddleware, CachingBehavior, MemoryCacheService, SqlServerDistributedCacheService, Serilog enrichers, NotFoundException |
 | 09 | Identity & Authentication | completed | 7/7 | ApplicationUser/Role complete; AccountController (Login/Register/Logout/AccessDenied); IdentityOptions; UpdateUserActivityMiddleware; Google auth stub |
 | 10 | Authorization Policies | completed | 5/5 | Role/claim/resource-based policies; CourseOwnerAuthorizationHandler; IsAdminActiveHandler; InstructorController + AdminController stubs; HttpContextAccessor |
-| 11 | Course Catalog: Domain & Persistence | not_started | 0/? | |
-| 12 | Course Catalog: Application Layer | not_started | 0/? | |
-| 13 | Course Catalog: MVC Frontend (Mint Layout) | not_started | 0/11 | example task file in `tasks/ch-13.tasks.md` |
-| 14 | Category Chips & Filtering | not_started | 0/? | |
-| 15 | Course Detail Page | not_started | 0/? | |
-| 16 | Reviews & Ratings System | not_started | 0/? | |
+| 11 | Course Catalog: Domain & Persistence | completed | 6/6 | LatestCoursesSpec, CoursesByCategorySpec, CourseWithDetailsSpec, CourseBySlugSpec, RecentReviewsSpec, GetCourseBySlugQueryHandler |
+| 12 | Course Catalog: Application Layer | completed | 8/8 | RelatedCoursesSpec, GetLatestCoursesQuery, GetCategoriesQuery+AllCategoriesSpec, IUserLookupService+UserLookupService, GetCourseBySlugQueryHandler updated, HomeViewModel, HomeController, projection overloads on IReadRepository |
+| 13 | Course Catalog: MVC Frontend (Mint Layout) | completed | 11/11 | site.css full mint theme, _Layout.cshtml, Home/Index.cshtml, _CourseCard partial, CategoryChipsViewComponent, ProfileSidebar stub, CourseController stub, MyCoursesController stub, _ViewImports updated |
+| 14 | Category Chips & Filtering | completed | 7/7 | GetPopularCoursesQuery(CategorySlug), PopularCourseCardsByCategorySpec, PopularGrid partial action, _PopularGrid.cshtml, HTMX chips, hx-push-url, site.js popstate |
+| 15 | Course Detail Page | completed | 7/7 | CourseController.Details+Enroll stubs, Course/Details.cshtml, _ReviewCard partial, ReviewController stub, MyCoursesController Learn+Lesson stubs, UseStatusCodePagesWithReExecute |
+| 16 | Reviews & Ratings System | completed | 8/8 | ReviewPolicy, AddReviewCommand+Validator+Handler, ReviewAddedEventHandler, IDomainEvent:INotification, ICurrentUserService, ReviewSpecs, UpdateReviewCommand, DeleteReviewCommand, _ReviewForm.cshtml |
 | 17 | Enrollment Workflow | not_started | 0/? | recommend `/ponytail-plan` — state machine is tricky |
 | 18 | My Courses & Progress Tracking | not_started | 0/? | uses `charts` skill for the activity bar chart |
 | 19 | Instructor Portal | not_started | 0/? | |

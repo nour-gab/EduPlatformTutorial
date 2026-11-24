@@ -1,0 +1,11 @@
+@* EduPlatform.Web/Views/Shared/_PopularGrid.cshtml — Ch.14 partial for AJAX/HTMX chip filtering *@
+@using EduPlatform.Application.Courses.Queries.GetPopularCourses
+@model IReadOnlyList<CourseCardDto>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    @foreach (var course in Model)
+    {
+        <div class="col">
+            <partial name="_CourseCard" model="course" />
+        </div>
+    }
+</div>

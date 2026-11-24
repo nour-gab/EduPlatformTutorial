@@ -36,6 +36,14 @@ public class Repository<T> : IRepository<T>, IReadRepository<T>
         ISpecification<T> spec, CancellationToken ct = default)
         => await _set.WithSpecification(spec).ToListAsync(ct);
 
+    public async Task<List<TResult>> ListAsync<TResult>(
+        ISpecification<T, TResult> spec, CancellationToken ct = default)
+        => await _set.WithSpecification(spec).ToListAsync(ct);
+
+    public async Task<TResult?> FirstOrDefaultAsync<TResult>(
+        ISpecification<T, TResult> spec, CancellationToken ct = default)
+        => await _set.WithSpecification(spec).FirstOrDefaultAsync(ct);
+
     public async Task<int> CountAsync(
         ISpecification<T> spec, CancellationToken ct = default)
         => await _set.WithSpecification(spec).CountAsync(ct);

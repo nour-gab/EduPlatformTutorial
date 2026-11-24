@@ -1,0 +1,7 @@
+/* profile-sidebar.css — placeholder for Ch.21 ProfileSidebar component styles */
+.profile-sidebar {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem;
+}

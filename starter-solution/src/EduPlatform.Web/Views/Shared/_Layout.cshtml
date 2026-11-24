@@ -1,9 +1,4 @@
-@{
-    // Minimal _Layout.cshtml placeholder.
-    // The full mint-themed layout is walked through in Ch.13.
-    // This stub keeps the starter solution compiling before you write Ch.13's code.
-}
-
+@* EduPlatform.Web/Views/Shared/_Layout.cshtml — Ch.13 Mint Layout *@
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,22 +7,84 @@
     <title>@ViewData["Title"] — EduPlatform</title>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/profile-sidebar.css" asp-append-version="true" />
 </head>
-<body style="background-color: #E8F5E9; min-height: 100vh;">
-    <header class="navbar navbar-expand-md sticky-top"
-            style="background-color: rgba(255,255,255,0.85); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(0,0,0,0.04);">
+<body>
+    <header class="navbar navbar-edu navbar-expand-md sticky-top">
         <div class="container">
             <a asp-controller="Home" asp-action="Index" class="navbar-brand fw-bold">
                 EduPlatform
             </a>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="nav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a asp-controller="Home" asp-action="Index"
+                           class="nav-link link-dark">Browse</a>
+                    </li>
+                    @if (User.IsInRole("Instructor"))
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="Instructor" asp-action="Index"
+                               class="nav-link link-dark">Instructor</a>
+                        </li>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="Admin" asp-action="Index"
+                               class="nav-link link-dark">Admin</a>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="Account" asp-action="Logout"
+                               class="nav-link link-dark">Sign out</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="Account" asp-action="Login"
+                               class="nav-link link-dark">Log in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Account" asp-action="Register"
+                               class="btn btn-success btn-sm ms-2 px-3">Get started</a>
+                        </li>
+                    }
+                </ul>
+            </div>
         </div>
     </header>
 
     <main class="container py-4">
-        @RenderBody()
+        <div class="row g-4">
+            <div class="col-12 @(User.Identity?.IsAuthenticated == true ? "col-lg-8" : "")">
+                @RenderBody()
+            </div>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <aside class="col-12 col-lg-4">
+                    @await Component.InvokeAsync("ProfileSidebar")
+                </aside>
+            }
+        </div>
     </main>
 
+    <footer class="container text-center py-4 text-muted small">
+        &copy; @DateTime.UtcNow.Year EduPlatform — built with .NET 8 + MediatR
+    </footer>
+
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10/dist/htmx.min.js" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

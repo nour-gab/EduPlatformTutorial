@@ -1,0 +1,171 @@
+@model dynamic
+@{
+    bool isEdit = Model is EduPlatform.Web.Controllers.EditCourseVm;
+    ViewData["Title"] = isEdit ? "Edit Course" : "Create Course";
+}
+
+<div class="container py-4">
+    <h1 class="h3 mb-4">@ViewData["Title"]</h1>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <div asp-validation-summary="All"></div>
+        </div>
+    }
+
+    @{
+        string formAction = isEdit ? "Edit" : "Create";
+    }
+
+    <form asp-action="@formAction" method="post" id="wizard-form">
+        @Html.AntiForgeryToken()
+
+        @if (isEdit)
+        {
+            var editVm = (EduPlatform.Web.Controllers.EditCourseVm)Model;
+            <input type="hidden" name="Id" value="@editVm.Id" />
+            <input type="hidden" name="RowVersion" value="@Convert.ToBase64String(editVm.RowVersion)" />
+        }
+
+        <!-- Bootstrap pill tabs -->
+        <ul class="nav nav-pills mb-4" id="wizard-tabs" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-basics" type="button">
+                    1. Basics
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-lessons" type="button">
+                    2. Lessons
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pricing" type="button">
+                    3. Pricing
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-review" type="button">
+                    4. Review
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content border rounded p-4">
+            <!-- Tab 1: Basics -->
+            <div class="tab-pane fade show active" id="tab-basics">
+                <h5 class="mb-3">Course Basics</h5>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+                    <input name="Title" class="form-control" value="@Model.Title"
+                           placeholder="e.g. Clean Architecture with .NET 8" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Slug <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <span class="input-group-text">/courses/</span>
+                        <input name="Slug" class="form-control" value="@Model.Slug"
+                               placeholder="clean-architecture-dotnet" id="slug-input" required />
+                    </div>
+                    <div class="form-text">URL-friendly identifier (lowercase, hyphens only).</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Description</label>
+                    <textarea name="Description" class="form-control" rows="4"
+                              placeholder="What will students learn?">@Model.Description</textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Category</label>
+                    <input name="CategoryId" class="form-control" value="@Model.CategoryId"
+                           placeholder="Category ID (GUID)" />
+                </div>
+
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="button" class="btn btn-primary wizard-next">Next →</button>
+                </div>
+            </div>
+
+            <!-- Tab 2: Lessons -->
+            <div class="tab-pane fade" id="tab-lessons">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Lessons</h5>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="add-lesson-btn">
+                        + Add Lesson
+                    </button>
+                </div>
+
+                <div id="lessons-container">
+                    @if (isEdit)
+                    {
+                        var editVm = (EduPlatform.Web.Controllers.EditCourseVm)Model;
+                        for (int i = 0; i < editVm.Lessons.Count; i++)
+                        {
+                            @Html.EditorFor(m => editVm.Lessons[i], "LessonRow", new { prefix = $"Lessons[{i}]" })
+                        }
+                    }
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="button" class="btn btn-outline-secondary wizard-prev">← Back</button>
+                    <button type="button" class="btn btn-primary wizard-next">Next →</button>
+                </div>
+            </div>
+
+            <!-- Tab 3: Pricing -->
+            <div class="tab-pane fade" id="tab-pricing">
+                <h5 class="mb-3">Pricing</h5>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Price</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input name="PriceAmount" type="number" step="0.01" min="0"
+                                   class="form-control" value="@Model.PriceAmount"
+                                   placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Currency</label>
+                        <select name="PriceCurrency" class="form-select">
+                            <option value="USD" selected="@(Model.PriceCurrency == "USD")">USD</option>
+                            <option value="EUR" selected="@(Model.PriceCurrency == "EUR")">EUR</option>
+                            <option value="GBP" selected="@(Model.PriceCurrency == "GBP")">GBP</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="button" class="btn btn-outline-secondary wizard-prev">← Back</button>
+                    <button type="button" class="btn btn-primary wizard-next">Next →</button>
+                </div>
+            </div>
+
+            <!-- Tab 4: Review & Submit -->
+            <div class="tab-pane fade" id="tab-review">
+                <h5 class="mb-3">Review & Submit</h5>
+                <p class="text-muted">Review your course details before saving. You can go back to any tab to make changes.</p>
+
+                <div class="alert alert-info">
+                    <strong>Note:</strong> Your course will be saved as a <em>Draft</em> until you publish it from the portal.
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="button" class="btn btn-outline-secondary wizard-prev">← Back</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-lg me-1"></i> @(isEdit ? "Save Changes" : "Create Course")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/wizard.js"></script>
+}

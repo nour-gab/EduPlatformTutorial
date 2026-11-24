@@ -3,7 +3,8 @@ using MediatR;
 
 namespace EduPlatform.Application.Courses.Queries.GetPopularCourses;
 
-public record GetPopularCoursesQuery : IRequest<Result<IReadOnlyList<CourseCardDto>>>;
+public record GetPopularCoursesQuery(string? CategorySlug = null)
+    : IRequest<Result<IReadOnlyList<CourseCardDto>>>;
 
 public record CourseCardDto(
     Guid Id,

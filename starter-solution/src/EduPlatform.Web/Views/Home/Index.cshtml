@@ -1,13 +1,50 @@
+@* EduPlatform.Web/Views/Home/Index.cshtml — Ch.13 *@
+@using EduPlatform.Web.ViewModels
+@model HomeViewModel
 @{
     ViewData["Title"] = "Invest in your education";
 }
 
-<section class="text-center" style="padding: 4rem 0 3rem;">
-    <h1 style="font-size: 2.4rem; font-weight: 700; margin-bottom: 0.5rem;">Invest in your education</h1>
-    <p class="lead text-muted">World-class courses from industry experts. Learn at your pace, build your future.</p>
-    <p class="text-muted small">
-        <em>This is the starter-solution placeholder home page.</em><br/>
-        Read <code>chapters/01-overview.md</code> through <code>chapters/13-course-catalog-mvc-frontend.md</code>
-        to build the real mint-themed catalog UI.
-    </p>
+<section class="hero-cta text-center">
+    <h1>Invest in your education</h1>
+    <p class="lead">World-class courses from industry experts. Learn at your pace, build your future.</p>
+    @if (User.Identity?.IsAuthenticated != true)
+    {
+        <a asp-controller="Account" asp-action="Register" class="btn btn-success btn-lg">
+            Get started — it's free
+        </a>
+    }
+    else
+    {
+        <a asp-controller="MyCourses" asp-action="Index" class="btn btn-success btn-lg">
+            Continue learning
+        </a>
+    }
 </section>
+
+@* Category chips *@
+<section class="mb-4">
+    @await Component.InvokeAsync("CategoryChips", new { activeSlug = (string?)ViewData["categorySlug"] })
+</section>
+
+@* Most popular — 2x2 grid wrapped in HTMX target *@
+<section>
+    <h2 class="h4 mb-3">Most popular</h2>
+    <div id="popular-grid">
+        <partial name="_PopularGrid" model="Model.Popular" />
+    </div>
+</section>
+
+@* Latest courses — horizontal grid *@
+<section class="mt-5">
+    <h2 class="h4 mb-3">New this week</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
+        @foreach (var course in Model.Latest)
+        {
+            <div class="col">
+                <partial name="_CourseCard" model="course" />
+            </div>
+        }
+    </div>
+</section>
+

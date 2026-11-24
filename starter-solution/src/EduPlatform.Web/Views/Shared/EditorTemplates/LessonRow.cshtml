@@ -1,0 +1,43 @@
+@model EduPlatform.Web.Controllers.LessonRowVm
+@{
+    // The parent sets the prefix via ViewData or EditorFor; ensure hidden ID is bound.
+    string pfx = ViewData.TemplateInfo.HtmlFieldPrefix;
+}
+
+<div class="lesson-row border rounded p-3 mb-2" data-order="@Model.Order">
+    <input type="hidden" name="@(pfx).Id" value="@Model.Id" />
+
+    <div class="row g-2 align-items-center">
+        <div class="col-auto">
+            <label class="form-label small mb-0">Order</label>
+            <input type="number" name="@(pfx).Order" class="form-control form-control-sm lesson-order"
+                   value="@Model.Order" style="width:70px;" />
+        </div>
+
+        <div class="col">
+            <label class="form-label small mb-0">Title</label>
+            <input type="text" name="@(pfx).Title" class="form-control form-control-sm"
+                   value="@Model.Title" placeholder="Lesson title" required />
+        </div>
+
+        <div class="col-auto d-flex align-items-end">
+            <div class="form-check">
+                <input type="checkbox" name="@(pfx).IsPreview" class="form-check-input"
+                       value="true" id="preview-@Model.Id"
+                       @(Model.IsPreview ? "checked" : "") />
+                <input type="hidden" name="@(pfx).IsPreview" value="false" />
+                <label class="form-check-label small" for="preview-@Model.Id">Free preview</label>
+            </div>
+        </div>
+
+        <div class="col-auto">
+            <button type="button" class="btn btn-sm btn-outline-danger remove-lesson-btn">✕</button>
+        </div>
+    </div>
+
+    <div class="mt-2">
+        <label class="form-label small mb-0">Content (Markdown)</label>
+        <textarea name="@(pfx).ContentMarkdown" class="form-control form-control-sm"
+                  rows="3" placeholder="Lesson content in Markdown...">@Model.ContentMarkdown</textarea>
+    </div>
+</div>

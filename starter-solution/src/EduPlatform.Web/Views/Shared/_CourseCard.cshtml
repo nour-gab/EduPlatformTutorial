@@ -1,0 +1,23 @@
+@* EduPlatform.Web/Views/Shared/_CourseCard.cshtml — Ch.13 *@
+@using EduPlatform.Application.Courses.Queries.GetPopularCourses
+@model CourseCardDto
+<a asp-controller="Course" asp-action="Details" asp-route-slug="@Model.Slug"
+   class="course-card d-block text-decoration-none text-reset">
+
+    <div class="course-card-banner"
+         style="background-color: @Model.CategoryColorHex"></div>
+
+    <div class="course-card-body">
+        <h3 class="course-card-title">@Model.Title</h3>
+        <div class="course-card-meta">
+            <span class="course-card-rating">
+                &#9733; @Model.AverageRating.ToString("0.0")
+            </span>
+            <span>@Model.EnrollmentCount.ToString("N0") students</span>
+        </div>
+        <div class="course-card-meta mt-2">
+            <span class="text-success fw-semibold">@Model.PriceAmount.ToString("0.00") @Model.PriceCurrency</span>
+            <span class="text-muted">View &rarr;</span>
+        </div>
+    </div>
+</a>

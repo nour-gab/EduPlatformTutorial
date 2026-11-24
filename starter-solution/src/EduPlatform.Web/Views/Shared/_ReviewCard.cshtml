@@ -1,0 +1,24 @@
+@* EduPlatform.Web/Views/Shared/_ReviewCard.cshtml — Ch.15 §15.5 *@
+@using EduPlatform.Application.Courses.Queries.GetCourseBySlug
+@model ReviewSummaryDto
+<div class="border-bottom pb-3 mb-3">
+    <div class="d-flex justify-content-between mb-1">
+        <strong>@Model.StudentName</strong>
+        <span class="text-warning">
+            @for (var i = 0; i < 5; i++)
+            {
+                if (i < (int)Math.Round(Model.Rating))
+                {
+                    <text>&#9733;</text>
+                }
+                else
+                {
+                    <text>&#9734;</text>
+                }
+            }
+            <span class="text-muted ms-1">@Model.Rating.ToString("0.0")</span>
+        </span>
+    </div>
+    <p class="text-muted small mb-1">@Model.CreatedAt.ToString("MMM d, yyyy")</p>
+    <p>@Model.Comment</p>
+</div>

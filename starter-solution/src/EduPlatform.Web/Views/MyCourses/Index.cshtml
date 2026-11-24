@@ -1,0 +1,62 @@
+@* EduPlatform.Web/Views/MyCourses/Index.cshtml — Ch.18 §18.2 *@
+@using EduPlatform.Application.Enrollment.Queries.GetMyCourses
+@using EduPlatform.Domain.Enrollment
+@model IReadOnlyList<MyCourseDto>
+@{
+    ViewData["Title"] = "My Courses";
+}
+
+<div class="container py-5">
+    <h1 class="h4 mb-4">My Courses</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You haven't enrolled in any courses yet.
+            <a asp-controller="Home" asp-action="Index" class="alert-link">Browse courses</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var course in Model)
+            {
+                var pct = course.TotalLessons == 0 ? 0
+                    : (int)Math.Round(100.0 * course.CompletedLessons / course.TotalLessons);
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body d-flex flex-column p-4">
+                            <span class="badge mb-2 text-dark"
+                                  style="background-color:@course.CategoryColorHex; width:fit-content">
+                                @course.Status
+                            </span>
+                            <h2 class="h6 mb-3">@course.Title</h2>
+
+                            <div class="progress mb-2" style="height:6px">
+                                <div class="progress-bar bg-success" style="width:@pct%"></div>
+                            </div>
+                            <small class="text-muted mb-3">
+                                @course.CompletedLessons / @course.TotalLessons lessons · @pct%
+                            </small>
+
+                            <div class="mt-auto">
+                                @if (course.Status == EnrollmentStatus.Completed)
+                                {
+                                    <span class="badge bg-success">Completed</span>
+                                }
+                                else
+                                {
+                                    <a asp-controller="MyCourses" asp-action="Learn"
+                                       asp-route-courseSlug="@course.Slug"
+                                       class="btn btn-success btn-sm">
+                                        @(course.CompletedLessons == 0 ? "Start learning" : "Continue")
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

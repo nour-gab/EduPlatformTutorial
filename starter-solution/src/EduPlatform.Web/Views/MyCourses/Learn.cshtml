@@ -1,0 +1,88 @@
+@* EduPlatform.Web/Views/MyCourses/Learn.cshtml — Ch.18 §18.4 *@
+@using EduPlatform.Application.Enrollment.Queries.GetLearningCourse
+@model LearningCourseDto
+@{
+    ViewData["Title"] = Model.Course.Title;
+    var currentLesson = Model.CurrentLesson;
+    var nextLesson    = Model.NextLesson;
+}
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="ratio ratio-16x9">
+                <div class="bg-dark d-flex align-items-center justify-content-center text-white">
+                    <div class="text-center">
+                        <i class="bi bi-play-circle" style="font-size: 4rem;"></i>
+                        <p class="mt-2 mb-0">@currentLesson.Title</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h1 class="h4 mb-0">@currentLesson.Title</h1>
+                    <form asp-action="MarkLessonCompleted" asp-controller="MyCourses"
+                          asp-route-courseSlug="@Model.Course.Slug"
+                          asp-route-lessonOrder="@currentLesson.Order"
+                          method="post" class="d-inline">
+                        <button class="btn btn-success btn-sm">Mark complete</button>
+                    </form>
+                </div>
+                <p class="text-muted">
+                    @currentLesson.EstimatedMinutes minutes · Lesson @(currentLesson.Order + 1) of @Model.Course.LessonCount
+                </p>
+                <hr />
+                <h2 class="h6">Lesson notes</h2>
+                <div class="lesson-content">
+                    <pre>@currentLesson.ContentMarkdown</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-3">
+                <h3 class="h6 mb-3">Lessons</h3>
+                <ol class="list-group list-group-flush">
+                    @foreach (var lesson in Model.Course.Lessons)
+                    {
+                        <li class="list-group-item d-flex align-items-center @(lesson.Order == currentLesson.Order ? "bg-light" : "")">
+                            <a asp-controller="MyCourses" asp-action="Learn"
+                               asp-route-courseSlug="@Model.Course.Slug"
+                               asp-route-order="@lesson.Order"
+                               class="text-decoration-none text-reset flex-grow-1">
+                                <span class="text-muted small me-2">@(lesson.Order + 1).</span>
+                                @lesson.Title
+                            </a>
+                            @if (lesson.IsCompleted)
+                            {
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                            }
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+
+        @if (nextLesson is not null)
+        {
+            <a asp-controller="MyCourses" asp-action="Learn"
+               asp-route-courseSlug="@Model.Course.Slug"
+               asp-route-order="@nextLesson.Order"
+               class="btn btn-success w-100 mt-3">
+                Next lesson → @nextLesson.Title
+            </a>
+        }
+        else
+        {
+            <div class="alert alert-success mt-3">
+                <i class="bi bi-trophy-fill me-2"></i> You've completed this course!
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/lesson-progress.js" asp-append-version="true"></script>
+}

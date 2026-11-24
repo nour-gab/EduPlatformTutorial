@@ -17,6 +17,13 @@ public class GetPopularCoursesQueryHandler
     public async Task<Result<IReadOnlyList<CourseCardDto>>> Handle(
         GetPopularCoursesQuery request, CancellationToken ct)
     {
+        if (!string.IsNullOrEmpty(request.CategorySlug))
+        {
+            var filtered = await _courseRepo.ListAsync<CourseCardDto>(
+                new PopularCourseCardsByCategorySpec(request.CategorySlug), ct);
+            return Result.Success((IReadOnlyList<CourseCardDto>)filtered);
+        }
+
         var courses = await _courseRepo.ListAsync(new PopularCoursesSpec(), ct);
         var dtos = courses.Select(c => new CourseCardDto(
             c.Id,

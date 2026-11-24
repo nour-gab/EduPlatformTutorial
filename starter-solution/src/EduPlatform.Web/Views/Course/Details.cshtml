@@ -1,0 +1,166 @@
+@* EduPlatform.Web/Views/Course/Details.cshtml — Ch.15 *@
+@using EduPlatform.Application.Courses.Queries.GetCourseBySlug
+@model CourseDetailDto
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@* Breadcrumb with Schema.org microdata (Ch.15 §15.4) *@
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a asp-controller="Home" asp-action="Index" itemprop="item">
+                <span itemprop="name">Home</span>
+            </a>
+            <meta itemprop="position" content="1" />
+        </li>
+        <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a asp-controller="Home" asp-action="Index"
+               asp-route-categorySlug="@Model.Slug" itemprop="item">
+                <span itemprop="name">@Model.CategoryName</span>
+            </a>
+            <meta itemprop="position" content="2" />
+        </li>
+        <li class="breadcrumb-item active" aria-current="page"
+            itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span itemprop="name">@Model.Title</span>
+            <meta itemprop="position" content="3" />
+        </li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        @* Course header *@
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">@Model.Title</h1>
+                <p class="text-muted mb-3">
+                    by <strong>@Model.InstructorName</strong>
+                </p>
+
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge me-2"
+                          style="background-color: @Model.CategoryColorHex; color: #1F1F2C;">
+                        @Model.CategoryName
+                    </span>
+                    <span class="me-3">
+                        &#9733;
+                        <strong>@Model.AverageRating.ToString("0.0")</strong>
+                        <span class="text-muted">(@Model.ReviewCount reviews)</span>
+                    </span>
+                    <span class="text-muted">@Model.EnrollmentCount.ToString("N0") students</span>
+                </div>
+
+                <p class="lead">@Model.Description</p>
+
+                <div class="d-flex align-items-center mt-4">
+                    <span class="h4 mb-0 me-3">
+                        @Model.PriceAmount.ToString("0.00") @Model.PriceCurrency
+                    </span>
+                    @if ((bool)ViewBag.IsEnrolled)
+                    {
+                        <a asp-controller="MyCourses" asp-action="Learn"
+                           asp-route-courseSlug="@Model.Slug"
+                           class="btn btn-success">Continue learning</a>
+                    }
+                    else if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <form asp-action="Enroll" asp-controller="Course"
+                              asp-route-slug="@Model.Slug" method="post">
+                            <button class="btn btn-success">Enroll now</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Register"
+                           class="btn btn-success">Sign up to enroll</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Lessons *@
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body p-4">
+                <h2 class="h5 mb-3">Lessons</h2>
+                <ol class="list-group list-group-numbered">
+                    @foreach (var lesson in Model.Lessons.OrderBy(l => l.Order))
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-semibold">@lesson.Title</div>
+                                @if (lesson.IsPreview)
+                                {
+                                    <span class="badge bg-info ms-1">Free preview</span>
+                                }
+                            </div>
+                            @if (lesson.IsPreview || (bool)ViewBag.IsEnrolled)
+                            {
+                                <a asp-controller="MyCourses" asp-action="Lesson"
+                                   asp-route-courseSlug="@Model.Slug"
+                                   asp-route-order="@lesson.Order"
+                                   class="btn btn-sm btn-outline-success">Watch</a>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">&#x1F512; Enroll to watch</span>
+                            }
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+
+        @* Recent reviews *@
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="h5 mb-0">Recent reviews</h2>
+                    <a asp-controller="Review" asp-action="Index"
+                       asp-route-courseSlug="@Model.Slug"
+                       class="btn btn-sm btn-outline-secondary">See all</a>
+                </div>
+                <hr />
+                @if (Model.RecentReviews.Count == 0)
+                {
+                    <p class="text-muted">No reviews yet. Be the first to leave one!</p>
+                }
+                else
+                {
+                    @foreach (var review in Model.RecentReviews)
+                    {
+                        <partial name="_ReviewCard" model="review" />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    @* Right column — what you'll learn + related courses *@
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h3 class="h6 mb-3">What you'll learn</h3>
+                <ul class="list-unstyled">
+                    <li class="mb-2">&#10003; Build production-ready apps</li>
+                    <li class="mb-2">&#10003; Industry best practices</li>
+                    <li class="mb-2">&#10003; Real-world project experience</li>
+                </ul>
+            </div>
+        </div>
+
+        @if (Model.RelatedCourses.Count > 0)
+        {
+            <h3 class="h6">Related courses</h3>
+            <div class="row row-cols-1 g-3">
+                @foreach (var course in Model.RelatedCourses)
+                {
+                    <div class="col">
+                        <partial name="_CourseCard" model="course" />
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
